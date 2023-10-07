@@ -100,12 +100,15 @@ class TimeReview {
 	// 发送上次缓存数据；
 	// 是否可以优化，在浏览器关闭之前的回调中，发送数据。
 	private async  sendLostCacheAction(){
-		let actionData = localStorage.action ;
+		let actionData ;
+        if (typeof window !== 'undefined') actionData = localStorage.action ;
 		if(!actionData) return ;
 		let action = JSON.parse(actionData) as ActionItem ;
 		let data = await axios.post('/app/todo/action/add', action ).then(r=>r.data).catch(e => ({ error: true, ...e.response?.data }));
 		console.log('发送缓存中未发送的数据 res:' , data ); // , actions , senddata
-		if( data && data.code == 1000) delete localStorage.action  ;
+		if( data && data.code == 1000) {
+            if (typeof window !== 'undefined') delete localStorage.action  ;
+        }
 	}
 
 	// 添加待发送的数据，如果是同一个页面，更新持续时间duration。
@@ -160,8 +163,8 @@ class TimeReview {
 	// 发送数据，夸日发送。如果是新的一天，拆分成两条数据。
     private async doCheckSend(item: ActionItem | null, justShow: any): Promise<void> {
 		if( !item && !this.waitSendItem ) return ; // 无数据可发送；
-
-        localStorage.action = JSON.stringify(item);
+        if (typeof window !== 'undefined') window.localStorage.action = JSON.stringify(item);
+        
         if (!this.waitSendItem) {  //缓存还未发送数据，
             this.waitSendItem = item;
             return;
@@ -200,7 +203,7 @@ class TimeReview {
 
     // 可以增加缓存时间。一天或1个小时。每次获取就太频繁
     public async validate(): Promise<{ error?: boolean, status?: number, [key: string]: any }> {            
-        let response = await axios.get('http://192.168.28.254:8001/app/common/apikey/validate?api_key=1ebf1a4d-465c-4deb-bc69-6ad93fc4cbc41')
+        let response = await axios.get('/app/common/apikey/validate')
             .then(r=> ({...r.data , status: 200}))
             .catch(e => ({ error: true, status: e.response?.status, ...e.response?.data }));    
         return response;
