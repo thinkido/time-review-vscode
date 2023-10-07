@@ -5,6 +5,7 @@ import { Logger } from './logger';
 import { Utils } from '../utils';
 import { Memento } from 'vscode';
 import dayjs = require('dayjs');
+import TimeReview from '../TimeReview'
 
 interface FileSelection {
   selection: vscode.Position;
@@ -56,6 +57,7 @@ export class WakaTime {
   private currentlyFocusedFile: string;
   private teamDevsForFileCache = {};
   private lastApiKeyPrompted: number = 0;
+  private timeReview:TimeReview  ;
 
   constructor(logger: Logger, config: Memento) {
     this.logger = logger;
@@ -375,7 +377,7 @@ export class WakaTime {
           if (file) {
             if (this.currentlyFocusedFile !== file) {
               this.updateTeamStatusBarFromJson();
-              this.updateTeamStatusBar(doc);
+              // this.updateTeamStatusBar(doc);
             }
 
             let time: number = Date.now();
@@ -482,20 +484,25 @@ export class WakaTime {
 
     this.logger.debug(`Sending heartbeat: ${JSON.stringify(payload)}`);
 
-    const apiKey = this.config.get('tracetime.apikey');
+    const apiKey = this.config.get('tracetime.apikey') as string;
+    // const baseURL = 'https://api.todo6.com' ;
+    const baseURL = 'http://localhost:8001' ;
     // const url = `https://api.todo6.com/app/todo/action/add?api_key=${apiKey}`;
-    const url = `http://localhost:8001/app/todo/action/add?api_key=${apiKey}`;
 
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Machine-Name': vscode.env.appHost,
-        },
-        body: JSON.stringify(payload),
-      });
-      const parsedJSON = await response.json();
+    try {      
+      if(!this.timeReview) this.timeReview = new TimeReview({ type: 'vscode' , baseURL: baseURL , apikey: apiKey  })
+      this.timeReview.addAction(payload as any);
+      // const response = await fetch(url, {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //     'X-Machine-Name': vscode.env.appHost,
+      //   },
+      //   body: JSON.stringify(payload),
+      // });
+      // const parsedJSON = await response.json();
+      const parsedJSON = await this.timeReview.validate();
+      const response = { status: parsedJSON.status }
       if (response.status == 200 || response.status == 201 || response.status == 202) {
         if (this.showStatusBar) this.getCodingActivity();
         vscode.window.showInformationMessage('Heartbeat sent successfully!');
@@ -545,12 +552,12 @@ export class WakaTime {
 
     this.hasApiKey((hasApiKey) => {
       if (!hasApiKey) return;
-      this._getCodingActivity();
+      // this._getCodingActivity();
     });
   }
 
+  // @ts-ignore
   private async _getCodingActivity() {
-    return; // 注释用不上部分协议；可能需要留意
     this.logger.debug('Fetching coding activity for Today from api.');
     const apiKey = this.config.get('tracetime.apikey');
     const url = `https://api.wakatime.com/api/v1/users/current/statusbar/today?api_key=${apiKey}`;
@@ -613,7 +620,6 @@ export class WakaTime {
   private async updateTeamStatusBar(doc?: vscode.TextDocument) {
     if (!this.showStatusBarTeam) return;
     if (!this.hasTeamFeatures) return;
-    return; // 注释用不上部分协议；可能需要留意
 
     if (!doc) {
       doc = vscode.window.activeTextEditor?.document;

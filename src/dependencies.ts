@@ -308,6 +308,7 @@ export class Dependencies {
   private unzip(file: string, outputDir: string, callback: () => void): void {
     if (fs.existsSync(file)) {
       try {
+        // @ts-ignore
         let zip = new adm_zip(file);
         zip.extractAllTo(outputDir, true);
       } catch (e) {
