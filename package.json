@@ -1,11 +1,11 @@
 {
-  "name": "vscode-wakatime",
-  "displayName": "WakaTime",
+  "name": "vscode-tracetime",
+  "displayName": "tracetime",
   "description": "Metrics, insights, and time tracking automatically generated from your programming activity.",
   "version": "24.2.3",
-  "publisher": "WakaTime",
+  "publisher": "todo6.com",
   "author": {
-    "name": "WakaTime"
+    "name": "thinkido"
   },
   "categories": [
     "Visualization",
@@ -32,13 +32,13 @@
     "worktime",
     "wakatime"
   ],
-  "homepage": "https://wakatime.com/",
+  "homepage": "https://todo6.com/todo/tracetime",
   "bugs": {
     "url": "https://github.com/wakatime/vscode-wakatime/issues",
     "email": "support@wakatime.com"
   },
   "license": "BSD-3-Clause",
-  "icon": "images/wakatime-logo.png",
+  "icon": "images/todo6-logo.png",
   "galleryBanner": {
     "color": "#AEC3D8",
     "theme": "light"
@@ -65,54 +65,54 @@
     "compile": "webpack --mode none",
     "compile:dev": "tsc -p ./",
     "watch": "webpack --mode none --watch",
-    "open-in-browser": "vscode-test-web --open-devtools --version sources --extensionDevelopmentPath=. .",
+    "open-in-browser": "vscode-test-web --open-devtools --quality insiders --extensionDevelopmentPath=. .",
     "test": "npm run compile:dev && node ./node_modules/vscode/bin/test"
   },
   "contributes": {
     "commands": [
       {
-        "command": "wakatime.apikey",
-        "title": "WakaTime: Api Key"
+        "command": "tracetime.apikey",
+        "title": "tracetime: Api Key"
       },
       {
-        "command": "wakatime.proxy",
-        "title": "WakaTime: Proxy"
+        "command": "tracetime.proxy",
+        "title": "Tracetime: Proxy"
       },
       {
-        "command": "wakatime.debug",
-        "title": "WakaTime: Debug"
+        "command": "tracetime.debug",
+        "title": "Tracetime: Debug"
       },
       {
-        "command": "wakatime.disable",
-        "title": "WakaTime: Disable/Enable Extension"
+        "command": "tracetime.disable",
+        "title": "tracetime: Disable/Enable Extension"
       },
       {
-        "command": "wakatime.status_bar_enabled",
-        "title": "WakaTime: Status Bar Enabled"
+        "command": "tracetime.status_bar_enabled",
+        "title": "Tracetime: Status Bar Enabled"
       },
       {
-        "command": "wakatime.status_bar_coding_activity",
-        "title": "WakaTime: Status Bar Coding Activity"
+        "command": "tracetime.status_bar_coding_activity",
+        "title": "Tracetime: Status Bar Coding Activity"
       },
       {
-        "command": "wakatime.dashboard",
-        "title": "WakaTime: Open Dashboard"
+        "command": "tracetime.dashboard",
+        "title": "Tracetime: Open Dashboard"
       },
       {
-        "command": "wakatime.config_file",
-        "title": "WakaTime: Open Config File..."
+        "command": "tracetime.config_file",
+        "title": "Tracetime: Open Config File..."
       },
       {
-        "command": "wakatime.log_file",
-        "title": "WakaTime: Open Log File..."
+        "command": "tracetime.log_file",
+        "title": "Tracetime: Open Log File..."
       }
     ],
     "configuration": {
-      "title": "WakaTime",
+      "title": "Tracetime",
       "properties": {
-        "wakatime.apiKey": {
+        "tracetime.apiKey": {
           "type": "string",
-          "description": "Defaults to value from ~/.wakatime.cfg, unless running in browser.",
+          "description": "Defaults to value from ~/.tracetime.cfg, unless running in browser.",
           "scope": "application"
         }
       }
@@ -140,5 +140,8 @@
     "webpack": "^5.70.0",
     "webpack-cli": "^4.9.2",
     "which": "^2.0.2"
+  },
+  "dependencies": {
+    "dayjs": "^1.11.10"
   }
 }

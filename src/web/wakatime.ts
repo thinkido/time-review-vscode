@@ -4,6 +4,7 @@ import { COMMAND_DASHBOARD, LogLevel } from '../constants';
 import { Logger } from './logger';
 import { Utils } from '../utils';
 import { Memento } from 'vscode';
+import dayjs = require('dayjs');
 
 interface FileSelection {
   selection: vscode.Position;
@@ -13,6 +14,19 @@ interface FileSelection {
 interface FileSelectionMap {
   [key: string]: FileSelection;
 }
+
+
+type ActionItem = {
+	createTime?: string | null;
+	duration: number;
+	timestamp: number;
+	path: string;
+	title: string;
+	app: number;      // 程序 0-浏览器 1-程序 2-vscode
+	action: string;      
+  ext?: any;   
+	userId?: string;
+};
 
 export class WakaTime {
   private agentName: string;
@@ -49,7 +63,8 @@ export class WakaTime {
   }
 
   public initialize(): void {
-    if (this.config.get('wakatime.debug') == 'true') {
+    this.logger.debug(`web initialize WakaTime `);
+    if (this.config.get('tracetime.debug') == 'true') {
       this.logger.setLevel(LogLevel.DEBUG);
     }
 
@@ -57,7 +72,7 @@ export class WakaTime {
     this.extension = (extension != undefined && extension.packageJSON) || { version: '0.0.0' };
     this.agentName = 'vscode';
 
-    this.disabled = this.config.get('wakatime.disabled') === 'true';
+    this.disabled = this.config.get('tracetime.disabled') === 'true';
     if (this.disabled) {
       this.dispose();
       return;
@@ -76,13 +91,13 @@ export class WakaTime {
   public initializeDependencies(): void {
     this.logger.debug(`Initializing WakaTime v${this.extension.version}`);
 
-    this.statusBar = vscode.window.createStatusBarItem("com.wakatime.statusbar", vscode.StatusBarAlignment.Left, 3);
+    this.statusBar = vscode.window.createStatusBarItem("com.tracetime.statusbar", vscode.StatusBarAlignment.Left, 3);
     this.statusBar.command = COMMAND_DASHBOARD;
 
-    this.statusBarTeamYou = vscode.window.createStatusBarItem("com.wakatime.teamyou", vscode.StatusBarAlignment.Left, 2);
-    this.statusBarTeamOther = vscode.window.createStatusBarItem("com.wakatime.teamother", vscode.StatusBarAlignment.Left, 1);
+    this.statusBarTeamYou = vscode.window.createStatusBarItem("com.tracetime.teamyou", vscode.StatusBarAlignment.Left, 2);
+    this.statusBarTeamOther = vscode.window.createStatusBarItem("com.tracetime.teamother", vscode.StatusBarAlignment.Left, 1);
 
-    const showStatusBar = this.config.get('wakatime.status_bar_enabled');
+    const showStatusBar = this.config.get('tracetime.status_bar_enabled');
     this.showStatusBar = showStatusBar !== 'false';
 
     const showStatusBarTeam = this.config.get('wakatime.status_bar_team');
@@ -96,8 +111,9 @@ export class WakaTime {
     this.setupEventListeners();
 
     this.logger.debug('WakaTime initialized.');
+    vscode.window.showInformationMessage('tracetime initialized!');
 
-    const showCodingActivity = this.config.get('wakatime.status_bar_coding_activity');
+    const showCodingActivity = this.config.get('tracetime.status_bar_coding_activity');
     this.showCodingActivity = showCodingActivity !== 'false';
 
     this.updateStatusBarText();
@@ -153,11 +169,11 @@ export class WakaTime {
   }
 
   public promptForApiKey(hidden: boolean = true): void {
-    let defaultVal: string = this.config.get('wakatime.apiKey') || '';
+    let defaultVal: string = this.config.get('tracetime.apikey') || '';
     if (Utils.apiKeyInvalid(defaultVal)) defaultVal = '';
     let promptOptions = {
-      prompt: 'WakaTime Api Key',
-      placeHolder: 'Enter your api key from https://wakatime.com/api-key',
+      prompt: 'web todo6 tracetime Api Key',
+      placeHolder: 'Enter your api key from https://todo6.com/common/apikey',
       value: defaultVal,
       ignoreFocusOut: true,
       password: hidden,
@@ -166,14 +182,14 @@ export class WakaTime {
     vscode.window.showInputBox(promptOptions).then((val) => {
       if (val != undefined) {
         let invalid = Utils.apiKeyInvalid(val);
-        if (!invalid) this.config.update('wakatime.apiKey', val);
+        if (!invalid) this.config.update('tracetime.apikey', val);
         else vscode.window.setStatusBarMessage(invalid);
-      } else vscode.window.setStatusBarMessage('WakaTime api key not provided');
+      } else vscode.window.setStatusBarMessage('todo6 tracetime api key not provided');
     });
   }
 
   public promptForDebug(): void {
-    let defaultVal: string = this.config.get('wakatime.debug') || '';
+    let defaultVal: string = this.config.get('tracetime.debug') || '';
     if (!defaultVal || defaultVal !== 'true') defaultVal = 'false';
     let items: string[] = ['true', 'false'];
     let promptOptions = {
@@ -183,7 +199,7 @@ export class WakaTime {
     };
     vscode.window.showQuickPick(items, promptOptions).then((newVal) => {
       if (newVal == null) return;
-      this.config.update('wakatime.debug', newVal);
+      this.config.update('tracetime.debug', newVal);
       if (newVal === 'true') {
         this.logger.setLevel(LogLevel.DEBUG);
         this.logger.debug('Debug enabled');
@@ -195,7 +211,7 @@ export class WakaTime {
 
   public promptToDisable(): void {
     const previousValue = this.disabled;
-    let currentVal = this.config.get('wakatime.disabled');
+    let currentVal = this.config.get('tracetime.disabled');
     if (!currentVal || currentVal !== 'true') currentVal = 'false';
     let items: string[] = ['disable', 'enable'];
     const helperText = currentVal === 'true' ? 'disabled' : 'enabled';
@@ -208,11 +224,11 @@ export class WakaTime {
       this.disabled = newVal === 'disable';
       if (this.disabled != previousValue) {
         if (this.disabled) {
-          this.config.update('wakatime.disabled', 'true');
+          this.config.update('tracetime.disabled', 'true');
           this.logger.debug('Extension disabled, will not report code stats to dashboard');
           this.dispose();
         } else {
-          this.config.update('wakatime.disabled', 'false');
+          this.config.update('tracetime.disabled', 'false');
           this.initializeDependencies();
         }
       }
@@ -220,7 +236,7 @@ export class WakaTime {
   }
 
   public promptStatusBarIcon(): void {
-    let defaultVal: string = this.config.get('wakatime.status_bar_enabled') || '';
+    let defaultVal: string = this.config.get('tracetime.status_bar_enabled') || '';
     if (!defaultVal || defaultVal !== 'false') defaultVal = 'true';
     let items: string[] = ['true', 'false'];
     let promptOptions = {
@@ -230,14 +246,14 @@ export class WakaTime {
     };
     vscode.window.showQuickPick(items, promptOptions).then((newVal) => {
       if (newVal !== 'true' && newVal !== 'false') return;
-      this.config.update('wakatime.status_bar_enabled', newVal);
+      this.config.update('tracetime.status_bar_enabled', newVal);
       this.showStatusBar = newVal === 'true'; // cache setting to prevent reading from disc too often
       this.setStatusBarVisibility(this.showStatusBar);
     });
   }
 
   public promptStatusBarCodingActivity(): void {
-    let defaultVal: string = this.config.get('wakatime.status_bar_coding_activity') || '';
+    let defaultVal: string = this.config.get('tracetime.status_bar_coding_activity') || '';
     if (!defaultVal || defaultVal !== 'false') defaultVal = 'true';
     let items: string[] = ['true', 'false'];
     let promptOptions = {
@@ -247,7 +263,7 @@ export class WakaTime {
     };
     vscode.window.showQuickPick(items, promptOptions).then((newVal) => {
       if (newVal !== 'true' && newVal !== 'false') return;
-      this.config.update('wakatime.status_bar_coding_activity', newVal);
+      this.config.update('tracetime.status_bar_coding_activity', newVal);
       if (newVal === 'true') {
         this.logger.debug('Coding activity in status bar has been enabled');
         this.showCodingActivity = true;
@@ -263,7 +279,7 @@ export class WakaTime {
   }
 
   public openDashboardWebsite(): void {
-    let url = 'https://wakatime.com/';
+    let url = 'https://todo6.com/todo/tracetime';
     vscode.env.openExternal(vscode.Uri.parse(url));
   }
 
@@ -274,7 +290,7 @@ export class WakaTime {
   }
 
   private hasApiKey(callback: (arg0: boolean) => void): void {
-    const apiKey: string = this.config.get('wakatime.apiKey') || '';
+    const apiKey: string = this.config.get('tracetime.apikey') || '';
     callback(!Utils.apiKeyInvalid(apiKey));
   }
 
@@ -346,6 +362,7 @@ export class WakaTime {
   }
 
   private onEvent(isWrite: boolean): void {
+    this.logger.warn('onEvnet:' + isWrite);
     clearTimeout(this.debounceTimeoutId);
     this.debounceTimeoutId = setTimeout(() => {
       if (this.disabled) return;
@@ -405,6 +422,7 @@ export class WakaTime {
     });
   }
 
+  
   private async _sendHeartbeat(
     doc: vscode.TextDocument,
     time: number,
@@ -423,40 +441,50 @@ export class WakaTime {
     // prevent sending the same heartbeat (https://github.com/wakatime/vscode-wakatime/issues/163)
     if (isWrite && this.isDuplicateHeartbeat(file, time, selection)) return;
 
-    const payload = {
-      type: 'file',
-      entity: file,
-      time: Date.now() / 1000,
-      lineno: String(selection.line + 1),
-      cursorpos: String(selection.character + 1),
-      lines: String(doc.lineCount),
-      is_write: isWrite,
-      plugin: this.getPlugin(),
+    
+    // item.createTime = dayjs(timeTemp).add( indexTimestamp , 'ms').format('YYYY-MM-DD HH:mm:ss.SSS') ;
+    const payload:ActionItem = {
+      createTime: dayjs().format('YYYY-MM-DD HH:mm:ss.SSS') , // 待计算；
+      duration: 0,
+      timestamp: Date.now() / 1000,
+      path: file,
+      title: doc.fileName,
+      app: 2 , // vscode
+      action: isWrite?'write':'read',
+      ext: { 
+        type: 'file',
+        lineno: String(selection.line + 1),
+        cursorpos: String(selection.character + 1),
+        lines: String(doc.lineCount),
+        is_write: isWrite,
+        plugin: this.getPlugin(),
+      },
     };
 
     const project = this.getProjectName();
-    if (project) payload['project'] = project;
+    if (project) payload.ext['project'] = project;
 
     const language = this.getLanguage(doc);
-    if (language) payload['language'] = language;
+    if (language) payload.ext['language'] = language;
 
     const folder = this.getProjectFolder(doc.uri);
     if (folder && file.indexOf(folder) === 0) {
-      payload['project_root_count'] = this.countSlashesInPath(folder);
+      payload.ext['project_root_count'] = this.countSlashesInPath(folder);
     }
 
     if (isDebugging) {
-      payload['category'] = 'debugging';
+      payload.ext['category'] = 'debugging';
     } else if (isCompiling) {
-      payload['category'] = 'building';
+      payload.ext['category'] = 'building';
     } else if (Utils.isPullRequest(doc.uri)) {
-      payload['category'] = 'code reviewing';
+      payload.ext['category'] = 'code reviewing';
     }
 
     this.logger.debug(`Sending heartbeat: ${JSON.stringify(payload)}`);
 
-    const apiKey = this.config.get('wakatime.apiKey');
-    const url = `https://api.wakatime.com/api/v1/users/current/heartbeats?api_key=${apiKey}`;
+    const apiKey = this.config.get('tracetime.apikey');
+    // const url = `https://api.todo6.com/app/todo/action/add?api_key=${apiKey}`;
+    const url = `http://localhost:8001/app/todo/action/add?api_key=${apiKey}`;
 
     try {
       const response = await fetch(url, {
@@ -470,8 +498,10 @@ export class WakaTime {
       const parsedJSON = await response.json();
       if (response.status == 200 || response.status == 201 || response.status == 202) {
         if (this.showStatusBar) this.getCodingActivity();
+        vscode.window.showInformationMessage('Heartbeat sent successfully!');
       } else {
         this.logger.warn(`API Error ${response.status}: ${parsedJSON}`);
+        vscode.window.showErrorMessage(`Error sending heartbeat: ${parsedJSON}`);
         if (response && response.status == 401) {
           let error_msg = 'Invalid WakaTime Api Key';
           if (this.showStatusBar) {
@@ -501,6 +531,7 @@ export class WakaTime {
         this.updateStatusBarTooltip(`WakaTime: ${error_msg}`);
       }
       this.logger.error(error_msg);
+      vscode.window.showErrorMessage(error_msg);
     }
   }
 
@@ -520,7 +551,7 @@ export class WakaTime {
 
   private async _getCodingActivity() {
     this.logger.debug('Fetching coding activity for Today from api.');
-    const apiKey = this.config.get('wakatime.apiKey');
+    const apiKey = this.config.get('tracetime.apikey');
     const url = `https://api.wakatime.com/api/v1/users/current/statusbar/today?api_key=${apiKey}`;
     try {
       const response = await fetch(url, {
@@ -533,7 +564,7 @@ export class WakaTime {
       });
       const parsedJSON = await response.json();
       if (response.status == 200) {
-        this.config.get('wakatime.status_bar_coding_activity');
+        this.config.get('tracetime.status_bar_coding_activity');
         if (this.showStatusBar) {
           if (parsedJSON.data) this.hasTeamFeatures = parsedJSON.data.has_team_features;
           let output = parsedJSON.data.grand_total.text;
@@ -602,7 +633,7 @@ export class WakaTime {
     }
 
     this.logger.debug('Fetching devs for currently focused file from api.');
-    const apiKey = this.config.get('wakatime.apiKey');
+    const apiKey = this.config.get('tracetime.apikey');
     const url = `https://api.wakatime.com/api/v1/users/current/file_experts?api_key=${apiKey}`;
 
     const payload = {
@@ -653,7 +684,7 @@ export class WakaTime {
         // make sure this file is still the currently focused file
         if (file !== this.currentlyFocusedFile) return;
 
-        this.config.get('wakatime.status_bar_coding_activity');
+        this.config.get('tracetime.status_bar_coding_activity');
         if (this.showStatusBar) {
           this.updateTeamStatusBarFromJson(devs);
         }
