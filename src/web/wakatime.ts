@@ -550,6 +550,7 @@ export class WakaTime {
   }
 
   private async _getCodingActivity() {
+    return; // 注释用不上部分协议；可能需要留意
     this.logger.debug('Fetching coding activity for Today from api.');
     const apiKey = this.config.get('tracetime.apikey');
     const url = `https://api.wakatime.com/api/v1/users/current/statusbar/today?api_key=${apiKey}`;
@@ -612,6 +613,7 @@ export class WakaTime {
   private async updateTeamStatusBar(doc?: vscode.TextDocument) {
     if (!this.showStatusBarTeam) return;
     if (!this.hasTeamFeatures) return;
+    return; // 注释用不上部分协议；可能需要留意
 
     if (!doc) {
       doc = vscode.window.activeTextEditor?.document;

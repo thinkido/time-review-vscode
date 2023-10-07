@@ -364,6 +364,7 @@ export class Dependencies {
   }
 
   private reportMissingPlatformSupport(osname: string, architecture: string): void {
+    return; // 注释用不上部分协议；可能需要留意
     const url = `https://api.wakatime.com/api/v1/cli-missing?osname=${osname}&architecture=${architecture}&plugin=vscode`;
     this.options.getSetting('settings', 'proxy', false, (proxy: Setting) => {
       this.options.getSetting('settings', 'no_ssl_verify', false, (noSSLVerify: Setting) => {
