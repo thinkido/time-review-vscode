@@ -24,6 +24,8 @@ class TimeReview {
     private type: string | undefined;
     private baseURL: string = 'https://api.todo6.com' ;
 
+	private throttledCheckSend ;
+
     private static searchArr = [
         { key: 'google.com/search', value: 'q' },
         { key: 'baidu.com/s', value: 'wd' },
@@ -51,6 +53,7 @@ class TimeReview {
         this.baseURL = params.baseURL;
         this.token = params.token || null;
         this.apikey = params.apikey || null;
+		this.throttledCheckSend = _.throttle(this.doCheckSend, 2000 );
 
 		axios.defaults.baseURL = this.baseURL ;
 		this.initData();
@@ -163,7 +166,11 @@ class TimeReview {
 	// 发送数据，夸日发送。如果是新的一天，拆分成两条数据。
     private async doCheckSend(item: ActionItem | null, justShow: any): Promise<void> {
 		if( !item && !this.waitSendItem ) return ; // 无数据可发送；
-        if (typeof window !== 'undefined') window.localStorage.action = JSON.stringify(item);
+        if ( typeof window !== 'undefined') {
+			if(item) window.localStorage.action = JSON.stringify(item);
+			else delete window.localStorage.action
+		}
+		// if(!item ) console.info('doCheckSend' ,  moment().format('YYYY-MM-DD HH:mm:ss.SSS') , this.waitSendItem );
 
         if (!this.waitSendItem) {  //缓存还未发送数据，
             this.waitSendItem = item;
@@ -213,7 +220,7 @@ class TimeReview {
 	 */
 	public async doSendBeforeClose(): Promise<void> {
 		if( !this.isActive ) return ;
-		this.doCheckSend(null,null);
+		this.throttledCheckSend(null, null); //节流函数，避免重复调用多次this.doCheckSend
 	}
 
     // 可以增加缓存时间。一天或1个小时。每次获取就太频繁
