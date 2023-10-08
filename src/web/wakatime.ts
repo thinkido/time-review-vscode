@@ -70,7 +70,7 @@ export class WakaTime {
       this.logger.setLevel(LogLevel.DEBUG);
     }
 
-    let extension = vscode.extensions.getExtension('WakaTime.vscode-wakatime');
+    let extension = vscode.extensions.getExtension('timereview.vscode-timereview');
     this.extension = (extension != undefined && extension.packageJSON) || { version: '0.0.0' };
     this.agentName = 'vscode';
 
@@ -102,7 +102,7 @@ export class WakaTime {
     const showStatusBar = this.config.get('timereview.status_bar_enabled');
     this.showStatusBar = showStatusBar !== 'false';
 
-    const showStatusBarTeam = this.config.get('wakatime.status_bar_team');
+    const showStatusBarTeam = this.config.get('timereview.status_bar_team');
     this.showStatusBarTeam = showStatusBarTeam !== 'false';
 
     this.setStatusBarVisibility(this.showStatusBar);
@@ -281,7 +281,7 @@ export class WakaTime {
   }
 
   public openDashboardWebsite(): void {
-    let url = 'https://todo6.com/todo/timereview';
+    let url = 'https://todo6.com/todo/time-review';
     vscode.env.openExternal(vscode.Uri.parse(url));
   }
 
@@ -567,7 +567,7 @@ export class WakaTime {
         headers: {
           'Content-Type': 'application/json',
           'User-Agent':
-            this.agentName + '/' + vscode.version + ' vscode-wakatime/' + this.extension.version,
+            this.agentName + '/' + vscode.version + ' vscode-timereview/' + this.extension.version,
         },
       });
       const parsedJSON = await response.json();
@@ -577,7 +577,7 @@ export class WakaTime {
           if (parsedJSON.data) this.hasTeamFeatures = parsedJSON.data.has_team_features;
           let output = parsedJSON.data.grand_total.text;
           if (
-            this.config.get('wakatime.status_bar_hide_categories') != 'true' &&
+            this.config.get('timereview.status_bar_hide_categories') != 'true' &&
             parsedJSON.data.categories.length > 1
           ) {
             output = parsedJSON.data.categories.map((x) => x.text + ' ' + x.name).join(', ');
@@ -646,7 +646,7 @@ export class WakaTime {
 
     const payload = {
       entity: file,
-      plugin: this.agentName + '/' + vscode.version + ' vscode-wakatime/' + this.extension.version,
+      plugin: this.agentName + '/' + vscode.version + ' vscode-timereview/' + this.extension.version,
     };
 
     const project = this.getProjectName();
@@ -663,7 +663,7 @@ export class WakaTime {
         headers: {
           'Content-Type': 'application/json',
           'User-Agent':
-            this.agentName + '/' + vscode.version + ' vscode-wakatime/' + this.extension.version,
+            this.agentName + '/' + vscode.version + ' vscode-timereview/' + this.extension.version,
         },
         body: JSON.stringify(payload),
       });
@@ -784,7 +784,7 @@ export class WakaTime {
   }
 
   private getPlugin(): string {
-    const agent = `${this.agentName}/${vscode.version} vscode-wakatime/${this.extension.version}`;
+    const agent = `${this.agentName}/${vscode.version} vscode-timereview/${this.extension.version}`;
     const os = this.getOperatingSystem();
     if (os) return `(${os}) ${agent}`;
     return agent;

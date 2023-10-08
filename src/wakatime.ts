@@ -76,7 +76,7 @@ export class WakaTime {
 
       this.dependencies = new Dependencies(this.options, this.logger, this.resourcesLocation);
 
-      let extension = vscode.extensions.getExtension('WakaTime.vscode-wakatime');
+      let extension = vscode.extensions.getExtension('WakaTime.vscode-timereview');
       this.extension = (extension != undefined && extension.packageJSON) || { version: '0.0.0' };
       this.agentName = this.appNames[vscode.env.appName] || 'vscode';
 
@@ -341,7 +341,7 @@ export class WakaTime {
   }
 
   public openDashboardWebsite(): void {
-    let url = 'https://todo6.com/todo/timereview';
+    let url = 'https://todo6.com/todo/time-review';
     vscode.env.openExternal(vscode.Uri.parse(url));
   }
 
@@ -518,7 +518,7 @@ export class WakaTime {
     args.push('--entity', Utils.quote(file));
 
     let user_agent =
-      this.agentName + '/' + vscode.version + ' vscode-wakatime/' + this.extension.version;
+      this.agentName + '/' + vscode.version + ' vscode-timereview/' + this.extension.version;
     args.push('--plugin', Utils.quote(user_agent));
 
     args.push('--lineno', String(selection.line + 1));
