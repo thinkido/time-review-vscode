@@ -1,7 +1,9 @@
+// @ts-nocheck
 import axios from 'axios';
 import _ from 'lodash';
 import moment from 'moment';
 import queryString from 'query-string';
+// import fetch from 'node-fetch';
 
 class TimeReview {
     private currActionKey: string;
@@ -25,6 +27,7 @@ class TimeReview {
     private baseURL: string = 'https://api.todo6.com' ;
 
 	private throttledCheckSend ;
+    private validateRes:any ;
 
     private static searchArr = [
         { key: 'google.com/search', value: 'q' },
@@ -75,7 +78,15 @@ class TimeReview {
         if(this.token)  axios.defaults.headers['Authorization'] = this.token;
 		if(this.apikey) axios.defaults.headers['X-API-Key'] = this.apikey;
 
-        let res = await axios.get('/app/todo/action/config', { params: { type:this.type } }).then(r => r.data).catch(e => ({ error: true, ...e }));
+        let res ; 
+        if (typeof window !== 'undefined') res = await axios.get('/app/todo/action/config', { params: { type:this.type } }).then(r => r.data).catch(e => ({ error: true, ...e.response?.data }));
+        else {
+            let headers:any = { Authorization: this.token, 'X-API-Key': this.apikey  };
+            let response = await fetch( this.baseURL + `/app/todo/action/config?type=${encodeURIComponent(this.type as string)}`, { headers });
+            res = await response.json();
+            if ( !response.ok )  res = { error: true, ...res };            
+        }
+
         if(res?.error) return  res ;
         let {  index, precision, token: tokenNew } = res.data;
         this.indexTimestamp = index,
@@ -107,7 +118,7 @@ class TimeReview {
         if (typeof window !== 'undefined') actionData = localStorage.action ;
 		if(!actionData) return ;
 		let action = JSON.parse(actionData) as ActionItem ;
-		let data = await axios.post('/app/todo/action/add', action ).then(r=>r.data).catch(e => ({ error: true, ...e.response?.data }));
+        let data:any = await this.httpSend(action);
 		console.log('发送缓存中未发送的数据 res:' , data ); // , actions , senddata
 		if( data && data.code == 1000) {
             if (typeof window !== 'undefined') delete localStorage.action  ;
@@ -190,7 +201,7 @@ class TimeReview {
 
             this.waitSendItem.duration = durationToEndOfDay;
 
-            await axios.post('/app/todo/action/add', this.waitSendItem);
+            await this.httpSend(this.waitSendItem);
             this.waitSendItem.createTime = today + ' 00:00:00' + this.waitSendItem.createTime?.substr(19);
             this.waitSendItem.duration = moment(createTime).hours() * 60 + moment(createTime).minute();
 			// 如果durationFromStartOfDay 和 durationToEndOfDay + this.waitSendItem.duration 相减，绝对值大于2，则打印错误信息；
@@ -198,11 +209,10 @@ class TimeReview {
 				console.error('跨日数据异常' , durationFromStartOfDay , durationToEndOfDay , this.waitSendItem.duration ) ;
 			}
 
-            await axios.post('/app/todo/action/add', this.waitSendItem);
+            await this.httpSend(this.waitSendItem);
         } else {
-            await axios.post('/app/todo/action/add', this.waitSendItem);
+            await this.httpSend(this.waitSendItem);
         }
-        // let data = await axios.post('/app/todo/action/add', this.waitSendItem);
         console.log('send res:', { sending: this.waitSendItem, waiting: item, ...justShow });
 
 		if( !item ) {
@@ -225,11 +235,38 @@ class TimeReview {
 
     // 可以增加缓存时间。一天或1个小时。每次获取就太频繁
     public async validate(): Promise<{ error?: boolean, status?: number, [key: string]: any }> {
-        let response = await axios.get('/app/common/apikey/validate')
-            .then(r=> ({...r.data , status: 200}))
-            .catch(e => ({ error: true, status: e.response?.status, ...e.response?.data }));
-        return response;
+        if( this.validateRes && !this.validateRes.error ) return this.validateRes ;  // 缓存验证数据;
+        let res; 
+        let headers: any = { Authorization: this.token, 'X-API-Key': this.apikey , 'Content-Type': 'application/json' };
+
+        if ( typeof window !== 'undefined' ) { // 
+            res = await axios.get('/app/common/apikey/validate').then(r => ({ ...r.data, status: 200 }))
+                .catch(e => ({ error: true, status: e.response?.status, ...e.response?.data }));
+        } else {
+            let response =  await fetch( this.baseURL + '/app/common/apikey/validate', { method: 'GET', headers })
+            res = await response.json();
+            if (!response.ok) res.error = true ;
+        }
+        console.log('validate res:', res);
+        this.validateRes = res ;
+        return res;
     }
+    
+    private async httpSend(item: ActionItem): Promise<any> {
+        let res;    
+        if (typeof window !== 'undefined') {
+            res = await axios.post('/app/todo/action/add', item).then(r => r.data).catch(e => ({ error: true, ...e.response?.data }));
+        } else {
+            let headers: any = { Authorization: this.token, 'X-API-Key': this.apikey , 'Content-Type': 'application/json' };
+            let response = await fetch(this.baseURL + '/app/todo/action/add', { method: 'POST', headers, body: JSON.stringify(item)})
+            res = await response.json();
+            if (!response.ok) res = { error: true, ...res };
+        }    
+        console.log('send res:', res);
+        this.validateRes = res ; // 如果服务器有返回，也可以作为验证的数据使用。如果数据出错，也可以更早发现问题。
+        return res;
+    }
+    
 
 	// 过滤网页中多余的参数，保证url唯一。
     private filterQueryURL(url: string): string {
@@ -301,6 +338,7 @@ interface ActionItem {
     action: string;
     app: number;
     userId?: string;
+    ext?:any;  // 扩展json字段，存储各种自定义字段。
 }
 
 export default TimeReview;
