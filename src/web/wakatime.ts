@@ -174,7 +174,7 @@ export class WakaTime {
     let defaultVal: string = this.config.get('timereview.apikey') || '';
     if (Utils.apiKeyInvalid(defaultVal)) defaultVal = '';
     let promptOptions = {
-      prompt: 'web todo6 timereview Api Key',
+      prompt: 'timereview Api Key',
       placeHolder: 'Enter your api key from https://todo6.com/common/apikey',
       value: defaultVal,
       ignoreFocusOut: true,
