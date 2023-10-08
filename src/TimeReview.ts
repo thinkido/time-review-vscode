@@ -164,7 +164,7 @@ class TimeReview {
     private async doCheckSend(item: ActionItem | null, justShow: any): Promise<void> {
 		if( !item && !this.waitSendItem ) return ; // 无数据可发送；
         if (typeof window !== 'undefined') window.localStorage.action = JSON.stringify(item);
-        
+
         if (!this.waitSendItem) {  //缓存还未发送数据，
             this.waitSendItem = item;
             return;
@@ -198,14 +198,29 @@ class TimeReview {
         // let data = await axios.post('/app/todo/action/add', this.waitSendItem);
         console.log('send res:', { sending: this.waitSendItem, waiting: item, ...justShow });
 
+		if( !item ) {
+			this.lastActionKey = '';
+			this.lastSendKey = '';
+			this.delayData = {};
+			this.timestamp = 0 ;
+		}
         this.waitSendItem = null;
     }
 
+	/**
+	 * 关闭前发送最后一条数据。
+	 * @returns
+	 */
+	public async doSendBeforeClose(): Promise<void> {
+		if( !this.isActive ) return ;
+		this.doCheckSend(null,null);
+	}
+
     // 可以增加缓存时间。一天或1个小时。每次获取就太频繁
-    public async validate(): Promise<{ error?: boolean, status?: number, [key: string]: any }> {            
+    public async validate(): Promise<{ error?: boolean, status?: number, [key: string]: any }> {
         let response = await axios.get('/app/common/apikey/validate')
             .then(r=> ({...r.data , status: 200}))
-            .catch(e => ({ error: true, status: e.response?.status, ...e.response?.data }));    
+            .catch(e => ({ error: true, status: e.response?.status, ...e.response?.data }));
         return response;
     }
 
@@ -232,15 +247,15 @@ class TimeReview {
     private getSearchKey(url: string, wd: string): string {
         let query = queryString.parse(url.replace(/.*\?/, ''));
         let value = query[wd];
-    
+
         // 如果 value 是一个字符串数组，返回数组的第一个元素
         if (Array.isArray(value)) {
             return decodeURIComponent(value[0] || '');
         }
-    
+
         // 否则，假设它是一个字符串并返回
         return decodeURIComponent(value || '');
-    }    
+    }
 
 
 	private getBrowserInfo() {
