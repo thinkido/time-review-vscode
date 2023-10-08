@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-# time-review-vscode
-
-回顾时间，VS code版本。统计时编程的时间。
-=======
 # TimeReview for Visual Studio Code
 
 [![Tests](https://img.shields.io/github/actions/workflow/status/wakatime/vscode-wakatime/on_push.yml?branch=master&label=tests)](https://github.com/wakatime/vscode-wakatime/actions)
@@ -122,4 +117,3 @@ Made with :heart: by the [TimeReview Team][about].
 [winca]: https://github.com/ukoloff/win-ca/tree/master/vscode
 [issues]: https://github.com/wakatime/vscode-wakatime/issues
 [about]: https://wakatime.com/about
->>>>>>> master
