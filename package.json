@@ -11,17 +11,25 @@
     "Visualization",
     "Education"
   ],
+  "scripts": {
+    "vscode:prepublish": "webpack --mode production",
+    "compile": "webpack --mode none",
+    "compile:dev": "tsc -p ./",
+    "watch": "webpack --mode none --watch",
+    "open-in-browser": "vscode-test-web --open-devtools --quality insiders --extensionDevelopmentPath=. .",
+    "test": "npm run compile:dev && node ./node_modules/vscode/bin/test"
+  },
   "keywords": [
+    "time manage",
+    "time review",
+    "timereview",
     "analytics",
+    "todo time",
     "code",
     "code time",
     "codetime",
     "flow",
     "focus",
-    "metrics",
-    "productivity",
-    "slack",
-    "standup",
     "time",
     "timer",
     "time tracker",
@@ -58,16 +66,8 @@
     "sqlops": "*",
     "azdata": "*"
   },
-  "main": "./dist/extension",
+  "main": "./dist/web/extension",
   "browser": "./dist/web/extension",
-  "scripts": {
-    "vscode:prepublish": "webpack --mode production",
-    "compile": "webpack --mode none",
-    "compile:dev": "tsc -p ./",
-    "watch": "webpack --mode none --watch",
-    "open-in-browser": "vscode-test-web --open-devtools --quality insiders --extensionDevelopmentPath=. .",
-    "test": "npm run compile:dev && node ./node_modules/vscode/bin/test"
-  },
   "contributes": {
     "commands": [
       {
@@ -147,6 +147,7 @@
     "dayjs": "^1.11.10",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
+    "node-fetch": "^3.3.2",
     "query-string": "^8.1.0"
   }
 }
