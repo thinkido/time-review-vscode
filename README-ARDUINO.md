@@ -1,24 +1,24 @@
-# Tracetime for Arduino IDE
+# TimeReview for Arduino IDE
 
 [![Tests](https://img.shields.io/github/actions/workflow/status/wakatime/vscode-wakatime/on_push.yml?branch=master&label=tests)](https://github.com/wakatime/vscode-wakatime/actions)
-[![Version](https://img.shields.io/visual-studio-marketplace/v/Tracetime.vscode-wakatime.png?label=Visual%20Studio%20Marketplace)](https://marketplace.visualstudio.com/items?itemName=Tracetime.vscode-wakatime)
-[![Tracetime](https://wakatime.com/badge/github/wakatime/vscode-wakatime.png?branch=master)](https://wakatime.com/badge/github/wakatime/vscode-wakatime)
+[![Version](https://img.shields.io/visual-studio-marketplace/v/TimeReview.vscode-wakatime.png?label=Visual%20Studio%20Marketplace)](https://marketplace.visualstudio.com/items?itemName=TimeReview.vscode-wakatime)
+[![TimeReview](https://wakatime.com/badge/github/wakatime/vscode-wakatime.png?branch=master)](https://wakatime.com/badge/github/wakatime/vscode-wakatime)
 
-[Tracetime][wakatime] is an open source VS Code plugin for metrics, insights, and time tracking automatically generated from your programming activity.
+[TimeReview][wakatime] is an open source VS Code plugin for metrics, insights, and time tracking automatically generated from your programming activity.
 
-[Arduino IDE](https://github.com/arduino/arduino-ide) `2.x` has been entirely rewritten and share no code with `1.x`. The new IDE is based on [Theia IDE](https://theia-ide.org/) framework and build with [Electron](https://www.electronjs.org/). It natively supports VSCODE extensions so we can use [Tracetime VSCODE](https://github.com/wakatime/vscode-wakatime) extension to track your coding time.
+[Arduino IDE](https://github.com/arduino/arduino-ide) `2.x` has been entirely rewritten and share no code with `1.x`. The new IDE is based on [Theia IDE](https://theia-ide.org/) framework and build with [Electron](https://www.electronjs.org/). It natively supports VSCODE extensions so we can use [TimeReview VSCODE](https://github.com/wakatime/vscode-wakatime) extension to track your coding time.
 
 ## Installation
 
 Unfortunately there's no native way to install VSCODE extensions in Arduino IDE so far. So we have to install it manually.
 
-1. Download the latest vscode-wakatime plugin vsix from [open-vsx.org](https://open-vsx.org/extension/Tracetime/vscode-wakatime).
+1. Download the latest vscode-wakatime plugin vsix from [open-vsx.org](https://open-vsx.org/extension/TimeReview/vscode-wakatime).
 2. Rename the `.vsix` file to `.zip`.
 3. Extract the zip file into `~/.arduinoIDE/plugins/vscode-wakatime`.
 4. Relaunch your Arduino IDE.
 5. Enter your [api key](https://wakatime.com/api-key), then press enter.
-    > (If you’re not prompted, press `F1` or `⌘ + Shift + P` then type `Tracetime API Key`.)
-6. Use Arduino IDE like you normally do and your coding activity will be displayed on your [Tracetime Dashboard](https://wakatime.com/).
+    > (If you’re not prompted, press `F1` or `⌘ + Shift + P` then type `TimeReview API Key`.)
+6. Use Arduino IDE like you normally do and your coding activity will be displayed on your [TimeReview Dashboard](https://wakatime.com/).
 
 ## Usage
 
@@ -32,34 +32,34 @@ VS Code specific settings are available from `⌘ + Shift + P`, then typing `wak
 
 For example, to hide today's coding activity in your status bar:
 
-Press `⌘ + Shift + P` then set `Tracetime: Status Bar Coding Activity` to `false`.
+Press `⌘ + Shift + P` then set `TimeReview: Status Bar Coding Activity` to `false`.
 
-Extension settings are stored in the INI file at `$WAKATIME_HOME/.tracetime.cfg`.
+Extension settings are stored in the INI file at `$WAKATIME_HOME/.timereview.cfg`.
 
 More information can be found from [wakatime-cli][wakatime-cli configs].
 
 Notes:
 
 1. `$WAKATIME_HOME` defaults to `$HOME`
-1. To disable the extension at startup add `disabled=true` to your config, this operation can also be performed by pressing `⌘ + Shift + P` and selecting `Tracetime: Disable`.
+1. To disable the extension at startup add `disabled=true` to your config, this operation can also be performed by pressing `⌘ + Shift + P` and selecting `TimeReview: Disable`.
 
 ## Troubleshooting
 
 First, turn on debug mode:
 
 1. Press `F1` or `⌘ + Shift + P`
-2. Type `> Tracetime: Debug`, and press `Enter`.
+2. Type `> TimeReview: Debug`, and press `Enter`.
 3. Select `true`, then press `Enter`.
 
 Next, open your Developer Console to view logs and errors:
 
 `Help → Toggle Developer Tools`
 
-Errors outside the scope of vscode-wakatime go to `$WAKATIME_HOME/.tracetime.log` from [wakatime-cli][wakatime-cli help].
+Errors outside the scope of vscode-wakatime go to `$WAKATIME_HOME/.timereview.log` from [wakatime-cli][wakatime-cli help].
 
 The [How to Debug Plugins][how to debug] guide shows how to check when coding activity was last received from your editor using the [Plugins Status Page][plugins status page].
 
-**Microsoft Windows Only:** Using Tracetime behind a corporate proxy? Try enabling your Windows Root Certs inside VS Code with the [win-ca][winca] extension:
+**Microsoft Windows Only:** Using TimeReview behind a corporate proxy? Try enabling your Windows Root Certs inside VS Code with the [win-ca][winca] extension:
 Press `Ctrl + Shift + X`, search for `win-ca`, press `Install`.
 
 For more general troubleshooting info, see the [wakatime-cli Troubleshooting Section][wakatime-cli help].
@@ -75,7 +75,7 @@ Please search [existing issues][issues] before creating a new one.
 
 Many thanks to all [contributors](AUTHORS)!
 
-Made with :heart: by the [Tracetime Team][about].
+Made with :heart: by the [TimeReview Team][about].
 
 [wakatime]: https://wakatime.com/vs-code
 [wakatime-cli help]: https://github.com/wakatime/wakatime-cli/blob/develop/TROUBLESHOOTING.md

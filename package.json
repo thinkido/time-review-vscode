@@ -1,6 +1,6 @@
 {
-  "name": "vscode-tracetime",
-  "displayName": "tracetime",
+  "name": "vscode-timereview",
+  "displayName": "timereview",
   "description": "Metrics, insights, and time tracking automatically generated from your programming activity.",
   "version": "24.2.3",
   "publisher": "todo6.com",
@@ -32,7 +32,7 @@
     "worktime",
     "wakatime"
   ],
-  "homepage": "https://todo6.com/todo/tracetime",
+  "homepage": "https://todo6.com/todo/time-review",
   "bugs": {
     "url": "https://github.com/wakatime/vscode-wakatime/issues",
     "email": "support@wakatime.com"
@@ -71,48 +71,48 @@
   "contributes": {
     "commands": [
       {
-        "command": "tracetime.apikey",
-        "title": "tracetime: Api Key"
+        "command": "timereview.apikey",
+        "title": "timereview: Api Key"
       },
       {
-        "command": "tracetime.proxy",
-        "title": "Tracetime: Proxy"
+        "command": "timereview.proxy",
+        "title": "TimeReview: Proxy"
       },
       {
-        "command": "tracetime.debug",
-        "title": "Tracetime: Debug"
+        "command": "timereview.debug",
+        "title": "TimeReview: Debug"
       },
       {
-        "command": "tracetime.disable",
-        "title": "tracetime: Disable/Enable Extension"
+        "command": "timereview.disable",
+        "title": "timereview: Disable/Enable Extension"
       },
       {
-        "command": "tracetime.status_bar_enabled",
-        "title": "Tracetime: Status Bar Enabled"
+        "command": "timereview.status_bar_enabled",
+        "title": "TimeReview: Status Bar Enabled"
       },
       {
-        "command": "tracetime.status_bar_coding_activity",
-        "title": "Tracetime: Status Bar Coding Activity"
+        "command": "timereview.status_bar_coding_activity",
+        "title": "TimeReview: Status Bar Coding Activity"
       },
       {
-        "command": "tracetime.dashboard",
-        "title": "Tracetime: Open Dashboard"
+        "command": "timereview.dashboard",
+        "title": "TimeReview: Open Dashboard"
       },
       {
-        "command": "tracetime.config_file",
-        "title": "Tracetime: Open Config File..."
+        "command": "timereview.config_file",
+        "title": "TimeReview: Open Config File..."
       },
       {
-        "command": "tracetime.log_file",
-        "title": "Tracetime: Open Log File..."
+        "command": "timereview.log_file",
+        "title": "TimeReview: Open Log File..."
       }
     ],
     "configuration": {
-      "title": "Tracetime",
+      "title": "TimeReview",
       "properties": {
-        "tracetime.apiKey": {
+        "timereview.apiKey": {
           "type": "string",
-          "description": "Defaults to value from ~/.tracetime.cfg, unless running in browser.",
+          "description": "Defaults to value from ~/.timereview.cfg, unless running in browser.",
           "scope": "application"
         }
       }

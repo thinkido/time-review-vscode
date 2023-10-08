@@ -101,7 +101,7 @@ export class WakaTime {
 
   private setResourcesLocation() {
     const home = Desktop.getHomeDirectory();
-    const folder = path.join(home, '.tracetime');
+    const folder = path.join(home, '.timereview');
 
     try {
       fs.mkdirSync(folder, { recursive: true });
@@ -114,11 +114,11 @@ export class WakaTime {
   public initializeDependencies(): void {
     this.logger.debug(`Initializing WakaTime v${this.extension.version}`);
 
-    this.statusBar = vscode.window.createStatusBarItem("com.tracetime.statusbar", vscode.StatusBarAlignment.Left, 3);
+    this.statusBar = vscode.window.createStatusBarItem("com.timereview.statusbar", vscode.StatusBarAlignment.Left, 3);
     this.statusBar.command = COMMAND_DASHBOARD;
 
-    this.statusBarTeamYou = vscode.window.createStatusBarItem("com.tracetime.teamyou", vscode.StatusBarAlignment.Left, 2);
-    this.statusBarTeamOther = vscode.window.createStatusBarItem("com.tracetime.teamother", vscode.StatusBarAlignment.Left, 1);
+    this.statusBarTeamYou = vscode.window.createStatusBarItem("com.timereview.teamyou", vscode.StatusBarAlignment.Left, 2);
+    this.statusBarTeamOther = vscode.window.createStatusBarItem("com.timereview.teamother", vscode.StatusBarAlignment.Left, 1);
 
     this.options.getSetting('settings', 'status_bar_team', false, (statusBarTeam: Setting) => {
       this.showStatusBarTeam = statusBarTeam.value !== 'false';
@@ -207,7 +207,7 @@ export class WakaTime {
     this.options.getApiKey((defaultVal: string | null) => {
       if (Utils.apiKeyInvalid(defaultVal ?? undefined)) defaultVal = '';
       let promptOptions = {
-        prompt: 'src todo6 tracetime Api Key',
+        prompt: 'src todo6 timereview Api Key',
         placeHolder: 'Enter your api key from https://todo6.com/common/apikey',
         value: defaultVal!,
         ignoreFocusOut: true,
@@ -220,7 +220,7 @@ export class WakaTime {
           if (!invalid) {
             this.options.setSetting('settings', 'api_key', val, false);
           } else vscode.window.setStatusBarMessage(invalid);
-        } else vscode.window.setStatusBarMessage('todo6 tracetime api key not provided');
+        } else vscode.window.setStatusBarMessage('todo6 timereview api key not provided');
       });
     });
   }
@@ -341,7 +341,7 @@ export class WakaTime {
   }
 
   public openDashboardWebsite(): void {
-    let url = 'https://todo6.com/todo/tracetime';
+    let url = 'https://todo6.com/todo/timereview';
     vscode.env.openExternal(vscode.Uri.parse(url));
   }
 

@@ -404,11 +404,11 @@
 
 ## 7.0.1 (2021-05-05)
 
-- Show status bar icon by default, when not disabled in tracetime.cfg file.
+- Show status bar icon by default, when not disabled in timereview.cfg file.
 
 ## 7.0.0 (2021-05-05)
 
-- Use Go wakatime-cli downloaded from GitHub releases, with legacy_python_cli tracetime.cfg option.
+- Use Go wakatime-cli downloaded from GitHub releases, with legacy_python_cli timereview.cfg option.
 
 ## 6.0.5 (2021-05-05)
 
@@ -628,7 +628,7 @@
 
 - Support for Portable Mode with config files in code-portable-data folder.
   [#91](https://github.com/wakatime/vscode-wakatime/pull/91)
-- New commands tracetime.config_file and tracetime.log_file.
+- New commands timereview.config_file and timereview.log_file.
   [#91](https://github.com/wakatime/vscode-wakatime/pull/91)
 
 
@@ -889,7 +889,7 @@
 
 ## 1.0.8 (2017-02-13)
 
-- Use proxy from ~/.tracetime.cfg when downloading dependencies.
+- Use proxy from ~/.timereview.cfg when downloading dependencies.
   [#13](https://github.com/wakatime/vscode-wakatime/issues/13)
 
 

@@ -22,9 +22,9 @@ export class Options {
 
   constructor(logger: Logger, resourcesFolder: string) {
     this.logger = logger;
-    this.configFile = path.join(Desktop.getHomeDirectory(), '.tracetime.cfg');
-    this.internalConfigFile = path.join(resourcesFolder, 'tracetime-internal.cfg');
-    this.logFile = path.join(resourcesFolder, 'tracetime.log');
+    this.configFile = path.join(Desktop.getHomeDirectory(), '.timereview.cfg');
+    this.internalConfigFile = path.join(resourcesFolder, 'timereview-internal.cfg');
+    this.logFile = path.join(resourcesFolder, 'timereview.log');
   }
 
   public async getSettingAsync<T = any>(section: string, key: string): Promise<T> {
@@ -289,7 +289,7 @@ export class Options {
   }
 
   private getApiKeyFromEditor(): string {
-    return vscode.workspace.getConfiguration().get('tracetime.apikey') || '';
+    return vscode.workspace.getConfiguration().get('timereview.apikey') || '';
   }
 
   // Support for gitpod.io https://github.com/wakatime/vscode-wakatime/pull/220
