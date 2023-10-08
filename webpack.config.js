@@ -58,7 +58,7 @@ const webConfig = /** @type WebpackConfig */ {
 const nodeConfig = /** @type WebpackConfig */ {
   name: 'Desktop',
   target: 'node',
-  entry: './src/extension.ts',
+  entry: './src/web/extension.ts',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'extension.js',
