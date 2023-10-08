@@ -213,7 +213,7 @@ class TimeReview {
         } else {
             await this.httpSend(this.waitSendItem);
         }
-        console.log('send res:', { sending: this.waitSendItem, waiting: item, ...justShow });
+        console.log('doCheckSend res:', { sending: this.waitSendItem, waiting: item, ...justShow });
 
 		if( !item ) {
 			this.lastActionKey = '';
@@ -245,9 +245,10 @@ class TimeReview {
         } else {
             let response =  await fetch( this.baseURL + '/app/common/apikey/validate', { method: 'GET', headers })
             res = await response.json();
+            res.status = response.status ;
             if (!response.ok) res.error = true ;
         }
-        console.log('validate res:', res);
+        console.log('validate res:', this.baseURL , res);
         this.validateRes = res ;
         return res;
     }
@@ -260,9 +261,10 @@ class TimeReview {
             let headers: any = { Authorization: this.token, 'X-API-Key': this.apikey , 'Content-Type': 'application/json' };
             let response = await fetch(this.baseURL + '/app/todo/action/add', { method: 'POST', headers, body: JSON.stringify(item)})
             res = await response.json();
+            res.status = response.status ;
             if (!response.ok) res = { error: true, ...res };
         }    
-        console.log('send res:', res);
+        console.log('send res:', this.baseURL , res);
         this.validateRes = res ; // 如果服务器有返回，也可以作为验证的数据使用。如果数据出错，也可以更早发现问题。
         return res;
     }
