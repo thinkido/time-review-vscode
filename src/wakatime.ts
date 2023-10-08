@@ -68,7 +68,7 @@ export class WakaTime {
   }
 
   public initialize(): void {
-    this.logger.debug(`src initialize WakaTime `);
+    this.logger.debug(`src initialize TimeReview `);
     this.options.getSetting('settings', 'debug', false, (setting: Setting) => {
       if (setting.value === 'true') {
         this.logger.setLevel(LogLevel.DEBUG);
@@ -76,7 +76,7 @@ export class WakaTime {
 
       this.dependencies = new Dependencies(this.options, this.logger, this.resourcesLocation);
 
-      let extension = vscode.extensions.getExtension('WakaTime.vscode-timereview');
+      let extension = vscode.extensions.getExtension('TimeReview.vscode-timereview');
       this.extension = (extension != undefined && extension.packageJSON) || { version: '0.0.0' };
       this.agentName = this.appNames[vscode.env.appName] || 'vscode';
 
@@ -112,7 +112,7 @@ export class WakaTime {
   }
 
   public initializeDependencies(): void {
-    this.logger.debug(`Initializing WakaTime v${this.extension.version}`);
+    this.logger.debug(`Initializing TimeReview v${this.extension.version}`);
 
     this.statusBar = vscode.window.createStatusBarItem("com.timereview.statusbar", vscode.StatusBarAlignment.Left, 3);
     this.statusBar.command = COMMAND_DASHBOARD;
@@ -129,7 +129,7 @@ export class WakaTime {
         (statusBarEnabled: Setting) => {
           this.showStatusBar = statusBarEnabled.value !== 'false';
           this.setStatusBarVisibility(this.showStatusBar);
-          this.updateStatusBarText('WakaTime Initializing...');
+          this.updateStatusBarText('TimeReview Initializing...');
 
           this.checkApiKey();
 
@@ -143,9 +143,9 @@ export class WakaTime {
               this.showCodingActivity = showCodingActivity.value !== 'false';
 
               this.dependencies.checkAndInstallCli(() => {
-                this.logger.debug('WakaTime initialized');
+                this.logger.debug('TimeReview initialized');
                 this.updateStatusBarText();
-                this.updateStatusBarTooltip('WakaTime: Initialized');
+                this.updateStatusBarTooltip('TimeReview: Initialized');
                 this.getCodingActivity();
               });
             },
@@ -230,7 +230,7 @@ export class WakaTime {
       let defaultVal = proxy.value;
       if (!defaultVal) defaultVal = '';
       let promptOptions = {
-        prompt: 'WakaTime Proxy',
+        prompt: 'TimeReview Proxy',
         placeHolder: `Proxy format is https://user:pass@host:port (current value \"${defaultVal}\")`,
         value: defaultVal,
         ignoreFocusOut: true,
@@ -574,7 +574,7 @@ export class WakaTime {
         if (this.showStatusBar) {
           if (!this.showCodingActivity) this.updateStatusBarText();
           this.updateStatusBarTooltip(
-            'WakaTime: working offline... coding activity will sync next time we are online',
+            'TimeReview: working offline... coding activity will sync next time we are online',
           );
         }
         this.logger.warn(
@@ -583,15 +583,15 @@ export class WakaTime {
       } else if (code == 103) {
         let error_msg = `Config parsing error (103); Check your ${this.options.getLogFile()} file for more details`;
         if (this.showStatusBar) {
-          this.updateStatusBarText('WakaTime Error');
-          this.updateStatusBarTooltip(`WakaTime: ${error_msg}`);
+          this.updateStatusBarText('TimeReview Error');
+          this.updateStatusBarTooltip(`TimeReview: ${error_msg}`);
         }
         this.logger.error(error_msg);
       } else if (code == 104) {
         let error_msg = 'Invalid Api Key (104); Make sure your Api Key is correct!';
         if (this.showStatusBar) {
-          this.updateStatusBarText('WakaTime Error');
-          this.updateStatusBarTooltip(`WakaTime: ${error_msg}`);
+          this.updateStatusBarText('TimeReview Error');
+          this.updateStatusBarTooltip(`TimeReview: ${error_msg}`);
         }
         this.logger.error(error_msg);
         let now: number = Date.now();
@@ -602,8 +602,8 @@ export class WakaTime {
       } else {
         let error_msg = `Unknown Error (${code}); Check your ${this.options.getLogFile()} file for more details`;
         if (this.showStatusBar) {
-          this.updateStatusBarText('WakaTime Error');
-          this.updateStatusBarTooltip(`WakaTime: ${error_msg}`);
+          this.updateStatusBarText('TimeReview Error');
+          this.updateStatusBarTooltip(`TimeReview: ${error_msg}`);
         }
         this.logger.error(error_msg);
       }
@@ -683,7 +683,7 @@ export class WakaTime {
                 if (this.showCodingActivity) {
                   this.updateStatusBarText(jsonData.text.trim());
                   this.updateStatusBarTooltip(
-                    'WakaTime: Today’s coding time. Click to visit dashboard.',
+                    'TimeReview: Today’s coding time. Click to visit dashboard.',
                   );
                 } else {
                   this.updateStatusBarText();
@@ -692,14 +692,14 @@ export class WakaTime {
               } else {
                 this.updateStatusBarText();
                 this.updateStatusBarTooltip(
-                  'WakaTime: Calculating time spent today in background...',
+                  'TimeReview: Calculating time spent today in background...',
                 );
               }
               this.updateTeamStatusBar();
             } else {
               this.updateStatusBarText();
               this.updateStatusBarTooltip(
-                'WakaTime: Calculating time spent today in background...',
+                'TimeReview: Calculating time spent today in background...',
               );
             }
           }
