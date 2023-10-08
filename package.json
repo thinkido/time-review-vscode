@@ -123,6 +123,7 @@
     "@types/azdata": "^1.35.0",
     "@types/mocha": "^9.1.0",
     "@types/node": "^17.0.21",
+    "@types/query-string": "^6.3.0",
     "@types/request": "^2.48.8",
     "@types/vscode": "^1.59.0",
     "@types/webpack": "^5.28.0",
@@ -142,6 +143,10 @@
     "which": "^2.0.2"
   },
   "dependencies": {
-    "dayjs": "^1.11.10"
+    "axios": "^1.5.1",
+    "dayjs": "^1.11.10",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.4",
+    "query-string": "^8.1.0"
   }
 }
