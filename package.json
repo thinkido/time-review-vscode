@@ -1,0 +1,153 @@
+{
+  "name": "vscode-timereview",
+  "displayName": "time review - 回顾时间",
+  "description": "时间管理,Metrics, insights, and time tracking automatically generated from your programming activity.",
+  "version": "24.2.3",
+  "publisher": "todo6.com",
+  "author": {
+    "name": "teader"
+  },
+  "categories": [
+    "Visualization",
+    "Education"
+  ],
+  "scripts": {
+    "vscode:prepublish": "webpack --mode production",
+    "compile": "webpack --mode none",
+    "compile:dev": "tsc -p ./",
+    "watch": "webpack --mode none --watch",
+    "open-in-browser": "vscode-test-web --open-devtools --quality insiders --extensionDevelopmentPath=. .",
+    "test": "npm run compile:dev && node ./node_modules/vscode/bin/test"
+  },
+  "keywords": [
+    "time manage",
+    "time review",
+    "timereview",
+    "analytics",
+    "todo time",
+    "code",
+    "code time",
+    "codetime",
+    "flow",
+    "focus",
+    "time",
+    "timer",
+    "time tracker",
+    "time tracking",
+    "todo",
+    "tracker",
+    "tracking",
+    "worktime",
+    "wakatime"
+  ],
+  "homepage": "https://todo6.com/todo/time-review",
+  "bugs": {
+    "url": "https://github.com/wakatime/vscode-wakatime/issues",
+    "email": "support@wakatime.com"
+  },
+  "license": "BSD-3-Clause",
+  "icon": "images/todo6-logo.png",
+  "galleryBanner": {
+    "color": "#AEC3D8",
+    "theme": "light"
+  },
+  "extensionKind": [
+    "workspace"
+  ],
+  "activationEvents": [
+    "*"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wakatime/vscode-wakatime.git"
+  },
+  "engines": {
+    "vscode": "^1.59.0",
+    "sqlops": "*",
+    "azdata": "*"
+  },
+  "main": "./dist/web/extension",
+  "browser": "./dist/web/extension",
+  "contributes": {
+    "commands": [
+      {
+        "command": "timereview.apikey",
+        "title": "timereview: Api Key"
+      },
+      {
+        "command": "timereview.proxy",
+        "title": "TimeReview: Proxy"
+      },
+      {
+        "command": "timereview.debug",
+        "title": "TimeReview: Debug"
+      },
+      {
+        "command": "timereview.disable",
+        "title": "timereview: Disable/Enable Extension"
+      },
+      {
+        "command": "timereview.status_bar_enabled",
+        "title": "TimeReview: Status Bar Enabled"
+      },
+      {
+        "command": "timereview.status_bar_coding_activity",
+        "title": "TimeReview: Status Bar Coding Activity"
+      },
+      {
+        "command": "timereview.dashboard",
+        "title": "TimeReview: Open Dashboard"
+      },
+      {
+        "command": "timereview.config_file",
+        "title": "TimeReview: Open Config File..."
+      },
+      {
+        "command": "timereview.log_file",
+        "title": "TimeReview: Open Log File..."
+      }
+    ],
+    "configuration": {
+      "title": "TimeReview",
+      "properties": {
+        "timereview.apiKey": {
+          "type": "string",
+          "description": "Defaults to value from ~/.timereview.cfg, unless running in browser.",
+          "scope": "application"
+        }
+      }
+    }
+  },
+  "devDependencies": {
+    "@types/adm-zip": "^0.4.34",
+    "@types/azdata": "^1.35.0",
+    "@types/mocha": "^9.1.0",
+    "@types/node": "^17.0.21",
+    "@types/query-string": "^6.3.0",
+    "@types/request": "^2.48.8",
+    "@types/vscode": "^1.59.0",
+    "@types/webpack": "^5.28.0",
+    "@types/which": "^2.0.1",
+    "@vscode/test-web": "^0.0.22",
+    "adm-zip": "0.5.9",
+    "azdata": "^1.0.0",
+    "del-cli": "^4.0.1",
+    "original-fs": "^1.1.0",
+    "prettier": "2.6.0",
+    "request": "2.88.2",
+    "ts-loader": "^9.2.8",
+    "tslib": "^2.3.1",
+    "typescript": "^4.6.2",
+    "webpack": "^5.70.0",
+    "webpack-cli": "^4.9.2",
+    "which": "^2.0.2"
+  },
+  "dependencies": {
+    "axios": "^1.5.1",
+    "dayjs": "^1.11.10",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.4",
+    "node-fetch": "^3.3.2",
+    "query-string": "^8.1.0"
+  }
+}

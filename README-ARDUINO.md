@@ -1,9 +1,4 @@
-<<<<<<< HEAD
-# time-review-vscode
-
-回顾时间，VS code版本。统计时编程的时间。
-=======
-# TimeReview for Visual Studio Code
+# TimeReview for Arduino IDE
 
 [![Tests](https://img.shields.io/github/actions/workflow/status/wakatime/vscode-wakatime/on_push.yml?branch=master&label=tests)](https://github.com/wakatime/vscode-wakatime/actions)
 [![Version](https://img.shields.io/visual-studio-marketplace/v/TimeReview.vscode-wakatime.png?label=Visual%20Studio%20Marketplace)](https://marketplace.visualstudio.com/items?itemName=TimeReview.vscode-wakatime)
@@ -11,20 +6,19 @@
 
 [TimeReview][wakatime] is an open source VS Code plugin for metrics, insights, and time tracking automatically generated from your programming activity.
 
+[Arduino IDE](https://github.com/arduino/arduino-ide) `2.x` has been entirely rewritten and share no code with `1.x`. The new IDE is based on [Theia IDE](https://theia-ide.org/) framework and build with [Electron](https://www.electronjs.org/). It natively supports VSCODE extensions so we can use [TimeReview VSCODE](https://github.com/wakatime/vscode-wakatime) extension to track your coding time.
+
 ## Installation
 
-1. Press `F1` or `⌘ + Shift + P` and type `install`. Pick `Extensions: Install Extension`.
+Unfortunately there's no native way to install VSCODE extensions in Arduino IDE so far. So we have to install it manually.
 
-    ![type install](./images/type-install.png)
-2. Type `wakatime` and hit `enter`.
-
-    ![type wakatime](./images/type-wakatime.png)
-
-3. Enter your [api key][api key], then press `enter`.
-
+1. Download the latest vscode-wakatime plugin vsix from [open-vsx.org](https://open-vsx.org/extension/TimeReview/vscode-wakatime).
+2. Rename the `.vsix` file to `.zip`.
+3. Extract the zip file into `~/.arduinoIDE/plugins/vscode-wakatime`.
+4. Relaunch your Arduino IDE.
+5. Enter your [api key](https://wakatime.com/api-key), then press enter.
     > (If you’re not prompted, press `F1` or `⌘ + Shift + P` then type `TimeReview API Key`.)
-
-4. Use VSCode and your coding activity will be displayed on your [TimeReview dashboard](https://wakatime.com)
+6. Use Arduino IDE like you normally do and your coding activity will be displayed on your [TimeReview Dashboard](https://wakatime.com/).
 
 ## Usage
 
@@ -43,8 +37,6 @@ Press `⌘ + Shift + P` then set `TimeReview: Status Bar Coding Activity` to `fa
 Extension settings are stored in the INI file at `$WAKATIME_HOME/.timereview.cfg`.
 
 More information can be found from [wakatime-cli][wakatime-cli configs].
-
-If using an online IDE like [gitpods](https://gitpod.io/), add your [api key][api key] to global ENV key `WAKATIME_API_KEY`.
 
 Notes:
 
@@ -72,49 +64,20 @@ Press `Ctrl + Shift + X`, search for `win-ca`, press `Install`.
 
 For more general troubleshooting info, see the [wakatime-cli Troubleshooting Section][wakatime-cli help].
 
-### SSH configuration
-
-If you're connected to a remote host using the [ssh extension](https://code.visualstudio.com/docs/remote/ssh) you might want to force TimeReview to run locally instead on the server. This configuration is needed when the server you connect is shared among other people. Please follow [this](https://code.visualstudio.com/docs/remote/ssh#_advanced-forcing-an-extension-to-run-locally-remotely) guide.
-
 ## Uninstalling
 
-1. Click the Extensions sidebar item in VS Code.
-
-2. Type `wakatime` and hit enter.
-
-3. Click the settings icon next to TimeReview, then click Uninstall.
-
-4. Delete the `~/.timereview*` files in your home directory, unless you’re still using TimeReview with another IDE.
+1. Delete folder `~/.arduinoIDE/plugins/vscode-wakatime`.
 
 ## Contributing
 
 Pull requests, bug reports, and feature requests are welcome!
 Please search [existing issues][issues] before creating a new one.
 
-To run from source:
-
-1. `git clone git@github.com:wakatime/vscode-wakatime.git`
-2. `cd vscode-wakatime`
-3. `npm install`
-4. `npm run watch`
-5. Install the extension from the marketplace
-6. Then symlink `~/.vscode/extensions/wakatime.vscode-wakatime-*/dist/extension.js` to `./dist/extension.js`
-
-Or to run the web version from source:
-
-1. `git clone git@github.com:wakatime/vscode-wakatime.git`
-2. `cd vscode-wakatime`
-3. `npm install`
-4. `npm run compile`
-5. `npm run open-in-browser`
-6. Go to [localhost:3000](http://localhost:3000/) in your web browser
-
 Many thanks to all [contributors](AUTHORS)!
 
 Made with :heart: by the [TimeReview Team][about].
 
 [wakatime]: https://wakatime.com/vs-code
-[api key]: https://wakatime.com/api-key
 [wakatime-cli help]: https://github.com/wakatime/wakatime-cli/blob/develop/TROUBLESHOOTING.md
 [wakatime-cli configs]: https://github.com/wakatime/wakatime-cli/blob/develop/USAGE.md
 [how to debug]: https://wakatime.com/faq#debug-plugins
@@ -122,4 +85,3 @@ Made with :heart: by the [TimeReview Team][about].
 [winca]: https://github.com/ukoloff/win-ca/tree/master/vscode
 [issues]: https://github.com/wakatime/vscode-wakatime/issues
 [about]: https://wakatime.com/about
->>>>>>> master
