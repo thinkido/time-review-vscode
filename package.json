@@ -1,7 +1,7 @@
 {
   "name": "vscode-timereview",
-  "displayName": "timereview",
-  "description": "Metrics, insights, and time tracking automatically generated from your programming activity.",
+  "displayName": "time review - 回顾时间",
+  "description": "时间管理,Metrics, insights, and time tracking automatically generated from your programming activity.",
   "version": "24.2.3",
   "publisher": "todo6.com",
   "author": {

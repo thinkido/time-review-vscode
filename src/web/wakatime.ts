@@ -485,9 +485,9 @@ export class WakaTime {
     this.logger.debug(`Sending heartbeat: ${JSON.stringify(payload)}`);
 
     const apiKey = this.config.get('timereview.apikey') as string;
-    // const baseURL = 'https://api.todo6.com' ;
-    const baseURL = 'http://localhost:8001' ;
-    // const url = `https://api.todo6.com/app/todo/action/add?api_key=${apiKey}`;
+    const baseURL = 'https://api.todo6.com' ;
+    // const baseURL = 'http://192.168.28.254:8001' ; // 开发环境；
+    // const url = `https://api.todo6.com/app/todo/action/add?api_key=${apiKey}`; // 保留类似官方接口地址。已优化，把逻辑放到了TimeReview中。
 
     try {      
       if(!this.timeReview) this.timeReview = new TimeReview({ type: 'vscode' , baseURL: baseURL , apikey: apiKey  })
@@ -505,10 +505,8 @@ export class WakaTime {
       const response = { status: parsedJSON.status }
       if (response.status == 200 || response.status == 201 || response.status == 202) {
         if (this.showStatusBar) this.getCodingActivity();
-        vscode.window.showInformationMessage('Heartbeat sent successfully!');
       } else {
         this.logger.warn(`API Error ${response.status}: ${parsedJSON}`);
-        vscode.window.showErrorMessage(`Error sending heartbeat: ${parsedJSON}`);
         if (response && response.status == 401) {
           let error_msg = 'Invalid TimeReview Api Key';
           if (this.showStatusBar) {
@@ -791,6 +789,7 @@ export class WakaTime {
   }
 
   private getOperatingSystem(): string|null {
+    if (typeof window == 'undefined') return null ;
     if ((navigator as any).userAgentData && (navigator as any).userAgentData.platform) {
       const platform = (navigator as any).userAgentData.platform as string;
       if (platform.toLowerCase().indexOf('mac') != -1) return 'Mac';
