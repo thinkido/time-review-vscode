@@ -443,13 +443,11 @@ export class WakaTime {
     // prevent sending the same heartbeat (https://github.com/wakatime/vscode-wakatime/issues/163)
     if (isWrite && this.isDuplicateHeartbeat(file, time, selection)) return;
 
-    
-    // item.createTime = dayjs(timeTemp).add( indexTimestamp , 'ms').format('YYYY-MM-DD HH:mm:ss.SSS') ;
     const payload:ActionItem = {
       createTime: dayjs().format('YYYY-MM-DD HH:mm:ss.SSS') , // 待计算；
       duration: 0,
       timestamp: Date.now() / 1000,
-      path: file,
+      path: 'vscode',   // path: file 
       title: doc.fileName,
       app: 2 , // vscode
       action: isWrite?'write':'read',
